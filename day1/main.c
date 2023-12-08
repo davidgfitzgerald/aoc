@@ -1,16 +1,17 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
 #define MAX_LINE 1024
 
 int readline(FILE *file, char *line);
 int digtoval(char character);
-int firstdigit(char *line);
-int lastdigit(char *line);
+int firstdigit(const char *line);
+int lastdigit(const char *line);
 
-int main()
-{
+int main(void) {
     FILE *infile = fopen("input.txt", "r");
-    if (infile == NULL) {
+    if (infile == NULL)
+    {
         perror("Error opening file");
         return 1;
     }
@@ -30,32 +31,22 @@ int main()
     return 0;
 }
 
-int digtoval(char character)
-{
+int digtoval(char character) {
     return character - '0';
 }
 
-int firstdigit(char *line)
-{
-    char *p = line;
-    while (!isdigit(*p))
+int firstdigit(const char *line) {
+    while (*line != '\0' && !isdigit(*(line)))
     {
-        p++;
+        line++;
     };
-    return digtoval(*p);
+    return digtoval(*line);
 }
 
-int lastdigit(char *line)
-{
-    char *p = line;
-    while (*p != '\0')
-    {
-        p++;
-    };
-
-    while (!isdigit(*p))
-    {
+int lastdigit(const char *line) {
+    const char *p = line + strlen(line) - 1;
+    while (!isdigit(*p)) {
         p--;
-    };
+    }
     return digtoval(*p);
 }
