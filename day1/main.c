@@ -1,50 +1,51 @@
 #include <stdio.h>
+#include <ctype.h>
 #define MAX_LINE 1024
 
-int readline(FILE *file, char *line)
+int readline(FILE *file, char *line);
+int digtoval(char character);
+int firstdigit(char *line);
+int lastdigit(char *line);
+
+int main()
 {
-    int letter;
-    char *p = line;
+    FILE *infile = fopen("input.txt", "r");
+    if (infile == NULL) {
+        perror("Error opening file");
+        return 1;
+    }
 
-    while ((letter = getc(file)))
+    char line[MAX_LINE];
+    int sum = 0;
+
+    while (fgets(line, MAX_LINE, infile) != NULL)
     {
-        if (letter == '\n')
-        {
-            break;
-        }
-        else if (letter == EOF)
-        {
-            return EOF;
-        };
+        int firstdig = firstdigit(line);
+        int lastdig = lastdigit(line);
 
-        *p++ = letter;
+        int linesum = 10 * (firstdig) + lastdig;
+        sum += linesum;
     };
-    *p = '\0';
-    return 1;
+    printf("%d", sum);
+    return 0;
 }
 
 int digtoval(char character)
 {
-    return character - 48;
+    return character - '0';
 }
 
-int isdig(char character)
-{
-    int integer = (int)character;
-    return integer >= 48 && integer <= 57;
-}
-
-int firstdig(char *line)
+int firstdigit(char *line)
 {
     char *p = line;
-    while (!isdig(*p))
+    while (!isdigit(*p))
     {
         p++;
     };
     return digtoval(*p);
 }
 
-int lastdig(char *line)
+int lastdigit(char *line)
 {
     char *p = line;
     while (*p != '\0')
@@ -52,33 +53,9 @@ int lastdig(char *line)
         p++;
     };
 
-    while (!isdig(*p))
+    while (!isdigit(*p))
     {
         p--;
     };
     return digtoval(*p);
-}
-
-int main()
-{
-    FILE *infile = fopen("input.txt", "r");
-
-    char line[MAX_LINE];
-    int sum = 0;
-    int res;
-
-    while ((res = readline(infile, line)))
-    {
-        int firstdigit = firstdig(line);
-        int lastdigit = lastdig(line);
-
-        int linesum = 10 * (firstdigit) + lastdigit;
-        sum += linesum;
-        if (res == EOF)
-        {
-            break;
-        };
-    };
-    printf("%d", sum);
-    return 0;
 }
