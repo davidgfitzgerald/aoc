@@ -2,17 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "part1.h"
+#include "testing.h"
 #define MAX_LINE 1024
 #define MAX_WORD 64
-
-
-typedef struct game
-{
-    int id;
-    int red;
-    int green;
-    int blue;
-} GAME;
 
 
 enum ProgramMode {
@@ -22,13 +15,9 @@ enum ProgramMode {
 };
 
 
-enum TestResult {
-    TEST_PASSED,
-    TEST_FAILED,
-};
-
 
 // prototypes
+// TODO - now we have .h file can these be removed???
 enum ProgramMode parseargs(int *argc, char* argv[]);
 GAME parsegame(char *line);
 enum TestResult test();
@@ -193,191 +182,4 @@ int readword(char **lineptr, char* word) {
     *word = '\0';
 
     return 1;  // success
-}
-
-
-enum TestResult assert(int actual, int expected, const char* fieldName) {
-    static int test_id = 0;
-    test_id += 1;
-
-    if (actual != expected) {
-        printf("Test %d failed\n", test_id);
-        printf("Expected %s %d to equal %d\n", fieldName, actual, expected);
-        return TEST_FAILED;
-    }
-    printf("Test %d passed\n", test_id);
-    return TEST_PASSED;
-}
-
-
-enum TestResult test_readword() {
-    char word[MAX_WORD];
-    char *line = "Game 1: Some Example Input\0";
-    int result;
-
-    result = readword(&line, word);
-    if (result == EOF || strcmp(word, "Game") != 0)  {
-        printf("Test 1 failed\n");
-        printf("Expected '%s' to equal '%s'\n", word, "Game");
-        return TEST_FAILED;
-    }
-    printf("Test 1 passed\n");
-
-    result = readword(&line, word);
-    if (result == EOF || strcmp(word, "1") != 0)  {
-        printf("Test 2 failed\n");
-        printf("Expected '%s' to equal '%s'\n", word, "1");
-        return TEST_FAILED;
-    }
-    printf("Test 2 passed\n");
-
-    result = readword(&line, word);
-    if (result == EOF || strcmp(word, "Some") != 0)  {
-        printf("Test 3 failed\n");
-        printf("Expected '%s' to equal '%s'\n", word, "Some");
-        return TEST_FAILED;
-    }
-    printf("Test 3 passed\n");
-
-    result = readword(&line, word);
-    if (result == EOF || strcmp(word, "Example") != 0)  {
-        printf("Test 4 failed\n");
-        printf("Expected '%s' to equal '%s'\n", word, "Example");
-        return TEST_FAILED;
-    }
-    printf("Test 4 passed\n");
-
-    result = readword(&line, word);
-    if (result == EOF || strcmp(word, "Input") != 0)  {
-        printf("Test 5 failed\n");
-        printf("Expected '%s' to equal '%s'\n", word, "Input");
-        return TEST_FAILED;
-    }
-    printf("Test 5 passed\n");
-
-    result = readword(&line, word);
-    if (result != EOF)  {
-        printf("Test 6 failed\n");
-        printf("Expected readword to return EOF but got result: %d", result);
-        return TEST_FAILED;
-    }
-    printf("Test 6 passed\n");
-
-    return TEST_PASSED;
-}
-
-
-enum TestResult test_parseintchar() {
-    int result;
-    int expected;
-
-    result = parseIntChar('0');
-    expected = 0;
-    if (result != expected)  {
-        printf("Test 1 failed\n");
-        printf("Expected parseintchar('0') '%d' to equal '%d'\n", result, expected);
-        return TEST_FAILED;
-    }
-    printf("Test 1 passed\n");
-
-    result = parseIntChar('1');
-    expected = 1;
-    if (result != expected)  {
-        printf("Test 2 failed\n");
-        printf("Expected parseint('1') '%d' to equal '%d'\n", result, expected);
-        return TEST_FAILED;
-    }
-    printf("Test 2 passed\n");
-
-    return TEST_PASSED;
-}
-
-
-enum TestResult test_parseint() {
-    int result;
-    int expected;
-
-    result = parseInt("1");
-    expected = 1;
-    if (result != expected)  {
-        printf("Test 1 failed\n");
-        printf("Expected parseint(\"1\") '%d' to equal '%d'\n", result, expected);
-        return TEST_FAILED;
-    }
-    printf("Test 1 passed\n");
-
-    result = parseInt("12");
-    expected = 12;
-    if (result != expected)  {
-        printf("Test 2 failed\n");
-        printf("Expected parseint(\"12\") '%d' to equal '%d'\n", result, expected);
-        return TEST_FAILED;
-    }
-    printf("Test 2 passed\n");
-
-    return TEST_PASSED;
-}
-
-
-enum TestResult test_parsegame() {
-    char line[] = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green";
-    GAME game = parsegame(line);
-
-    if (
-        assert(game.id, 1, "game.id") == TEST_FAILED ||
-        assert(game.red, 4, "game.red") == TEST_FAILED ||
-        assert(game.green, 2, "game.green") == TEST_FAILED ||
-        assert(game.blue, 6, "game.blue") == TEST_FAILED
-    ) {
-        return TEST_FAILED;
-    }
-    return TEST_PASSED;
-}
-
-
-#define TEST_FUNCTION(func) \
-    /* Using this macro defines a 
-    function called run_<func name>. This 
-    macro wraps logging around a test 
-    function and could in future be 
-    developed with more functionality.
-
-    #func stringizes the token func to 
-    become the name of the function as a 
-    string literal.
-
-    ## is token pasting / token 
-    concatanation and joins two strings 
-    together whilst also stringizing 
-    tokens.
-    */ \
-    const char *func ## _name = #func; \
-    enum TestResult run_ ## func() { \
-        printf("- %s\n", func ## _name); \
-        enum TestResult result = func(); \
-        printf("\n"); \
-        return result; \
-    }
-
-
-// Define test functions using the TEST_FUNCTION macro
-TEST_FUNCTION(test_readword)
-TEST_FUNCTION(test_parseintchar)
-TEST_FUNCTION(test_parseint)
-TEST_FUNCTION(test_parsegame)
-
-
-enum TestResult test() {
-    printf("\nRunning tests\n\n");
-
-    if (
-        run_test_readword() == TEST_FAILED ||
-        run_test_parseintchar() == TEST_FAILED ||
-        run_test_parseint() == TEST_FAILED ||
-        run_test_parsegame() == TEST_FAILED
-    ) {
-        return TEST_FAILED;
-    }
-
-    return TEST_PASSED;
 }
