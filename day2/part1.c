@@ -360,37 +360,28 @@ enum TestResult test_parsegame() {
 }
 
 
+typedef enum TestResult (*TestFunction)();
+
+
+enum TestResult runTest(TestFunction testFunc, const char *testName) {
+    printf("- %s\n", testName);
+    enum TestResult result = testFunc();
+    printf("\n");
+    return result;
+}
+
+
 enum TestResult test() {
-    enum TestResult result;
     printf("\nRunning tests\n\n");
 
-    printf("- test_readword\n");
-    result = test_readword();
-    if (result == TEST_FAILED) {
+    if (
+        runTest(test_readword, "test_readword") == TEST_FAILED ||
+        runTest(test_parseintchar, "test_parseintchar") == TEST_FAILED ||
+        runTest(test_parseint, "test_parseint") == TEST_FAILED ||
+        runTest(test_parsegame, "test_parsegame") == TEST_FAILED
+    ) {
         return TEST_FAILED;
-    };
-    printf("\n");
-
-    printf("- test_parseintchar\n");
-    result = test_parseintchar();
-    if (result == TEST_FAILED) {
-        return TEST_FAILED;
-    };
-    printf("\n");
-
-    printf("- test_parseint\n");
-    result = test_parseint();
-    if (result == TEST_FAILED) {
-        return TEST_FAILED;
-    };
-    printf("\n");
-
-    printf("- test_parsegame\n");
-    result = test_parsegame();
-    if (result == TEST_FAILED) {
-        return TEST_FAILED;
-    };
-    printf("\n");
+    }
 
     return TEST_PASSED;
 }
