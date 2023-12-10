@@ -360,25 +360,32 @@ enum TestResult test_parsegame() {
 }
 
 
-typedef enum TestResult (*TestFunction)();
+#define TEST_FUNCTION(func) \
+    enum TestResult func(); \
+    const char *func##_name = #func; \
+    enum TestResult run_##func() { \
+        printf("- %s\n", func##_name); \
+        enum TestResult result = func(); \
+        printf("\n"); \
+        return result; \
+    }
 
 
-enum TestResult runTest(TestFunction testFunc, const char *testName) {
-    printf("- %s\n", testName);
-    enum TestResult result = testFunc();
-    printf("\n");
-    return result;
-}
+// Define test functions using TEST_FUNCTION macro
+TEST_FUNCTION(test_readword)  // defines a test called run_test_readword
+TEST_FUNCTION(test_parseintchar) // defines a test called run_test_parseintchar
+TEST_FUNCTION(test_parseint) // defines a test called run_test_parseint
+TEST_FUNCTION(test_parsegame) // defines a test called run_test_parsegame
 
 
 enum TestResult test() {
     printf("\nRunning tests\n\n");
 
     if (
-        runTest(test_readword, "test_readword") == TEST_FAILED ||
-        runTest(test_parseintchar, "test_parseintchar") == TEST_FAILED ||
-        runTest(test_parseint, "test_parseint") == TEST_FAILED ||
-        runTest(test_parsegame, "test_parsegame") == TEST_FAILED
+        run_test_readword() == TEST_FAILED ||
+        run_test_parseintchar() == TEST_FAILED ||
+        run_test_parseint() == TEST_FAILED ||
+        run_test_parsegame() == TEST_FAILED
     ) {
         return TEST_FAILED;
     }
