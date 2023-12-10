@@ -2,28 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+
 #include "part1.h"
-#include "testing.h"
-#define MAX_LINE 1024
-#define MAX_WORD 64
-
-
-enum ProgramMode {
-    REGULAR_MODE,
-    TEST_MODE,
-    INVALID_MODE,
-};
-
-
-
-// prototypes
-// TODO - now we have .h file can these be removed???
-enum ProgramMode parseargs(int *argc, char* argv[]);
-GAME parsegame(char *line);
-enum TestResult test();
-int readword(char **lineptr, char* word);
-int parseInt(char* character);
-int validgame(GAME game);
+#include "test_part1.h"
 
 
 int main(int argc, char* argv[]) {
@@ -106,6 +87,7 @@ GAME parsegame(char *line) {
         if (strcmp(word1, "Game") == 0) {
             game.id = parseInt(word2);
         };
+
         if (strcmp(word2, "red") == 0) {
             red = parseInt(word1);
             if (red >= game.red) {

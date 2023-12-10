@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
 
-SRCS_PT1 = part1.c testing.c
+SRCS_PT1 = part1.c testing.c test_part1.c
 OBJS_PT1 = $(SRCS_PT1:.c=.o)
 EXEC_PT1 = part1.out
 

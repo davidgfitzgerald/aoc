@@ -12,7 +12,11 @@ typedef struct game
     int green;
     int blue;
 } GAME;
-enum ProgramMode;
+enum ProgramMode {
+    REGULAR_MODE,
+    TEST_MODE,
+    INVALID_MODE,
+};
 int main(int argc, char* argv[]);
 enum ProgramMode parseargs(int *argc, char* argv[]);
 int validgame(GAME game);
