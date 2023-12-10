@@ -66,10 +66,6 @@ int main(int argc, char* argv[]) {
 
     while (fgets(line, MAX_LINE, infile) != NULL) {
         game = parsegame(line);
-        // printf("ID: %d\n", game.id);
-        // printf("red: %d\n", game.red);
-        // printf("green: %d\n", game.green);
-        // printf("blue: %d\n", game.blue);
 
         isvalidgame = validgame(game);
         if (isvalidgame > 0) {
@@ -104,12 +100,7 @@ int validgame(GAME game) {
 }
 
 GAME parsegame(char *line) {
-    GAME game;
-
-    game.id = 0;
-    game.red = 0;
-    game.green = 0;
-    game.blue = 0;
+    GAME game = {.id = 0, .red = 0, .green = 0, .blue = 0};
 
     int result;
     char word[MAX_WORD];
@@ -119,15 +110,10 @@ GAME parsegame(char *line) {
     int green;
     int blue;
 
-    // Possibly unnecessary
-    word[0] = '\0';
-    word1[0] = '\0';
-    word2[0] = '\0';
-
     while ((result = readword(&line, word)) != EOF) {
         strcpy(word1, word2);
         strcpy(word2, word);
-        // printf("word1: '%-5s', word2: '%-5s'\n", word1, word2);
+
         if (strcmp(word1, "Game") == 0) {
             game.id = parseInt(word2);
         };
@@ -195,13 +181,11 @@ int parseInt(char* string) {
 
 
 int readword(char **lineptr, char* word) {
-    // printf("Reading word, strlen(): %zu\n", strlen(*lineptr));
     if (strlen(*lineptr) < 1) {
         return EOF;
     }
     stripleading(&*lineptr);
 
-    // Read only alphabetic and numeric characters
     while (isalpha(**lineptr) || isdigit(**lineptr)) {
         *word = **lineptr;
         (*lineptr)++; word++;
@@ -209,6 +193,20 @@ int readword(char **lineptr, char* word) {
     *word = '\0';
 
     return 1;  // success
+}
+
+
+enum TestResult assert(int actual, int expected, const char* fieldName) {
+    static int test_id = 0;
+    test_id += 1;
+
+    if (actual != expected) {
+        printf("Test %d failed\n", test_id);
+        printf("Expected %s %d to equal %d\n", fieldName, actual, expected);
+        return TEST_FAILED;
+    }
+    printf("Test %d passed\n", test_id);
+    return TEST_PASSED;
 }
 
 
@@ -322,60 +320,51 @@ enum TestResult test_parseint() {
 
 
 enum TestResult test_parsegame() {
-    int expected;
     char line[] = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green";
     GAME game = parsegame(line);
 
-    expected = 1;
-    if (game.id != expected) {
-        printf("Test 1 failed\n");
-        printf("Expected game.id %d to equal %d\n", game.id, expected);
+    if (
+        assert(game.id, 1, "game.id") == TEST_FAILED ||
+        assert(game.red, 4, "game.red") == TEST_FAILED ||
+        assert(game.green, 2, "game.green") == TEST_FAILED ||
+        assert(game.blue, 6, "game.blue") == TEST_FAILED
+    ) {
         return TEST_FAILED;
     }
-
-    expected = 4;
-    if (game.red != expected) {
-        printf("Test 1 failed\n");
-        printf("Expected game.red %d to equal %d\n", game.red, expected);
-        return TEST_FAILED;
-    }
-
-    expected = 2;
-    if (game.green != expected) {
-        printf("Test 1 failed\n");
-        printf("Expected game.green %d to equal %d\n", game.green, expected);
-        return TEST_FAILED;
-    }
-
-    expected = 6;
-    if (game.blue != expected) {
-        printf("Test 1 failed\n");
-        printf("Expected game.blue %d to equal %d\n", game.blue, expected);
-        return TEST_FAILED;
-    }
-
-    printf("Test 1 passed\n");
-
     return TEST_PASSED;
 }
 
 
 #define TEST_FUNCTION(func) \
-    enum TestResult func(); \
-    const char *func##_name = #func; \
-    enum TestResult run_##func() { \
-        printf("- %s\n", func##_name); \
+    /* Using this macro defines a 
+    function called run_<func name>. This 
+    macro wraps logging around a test 
+    function and could in future be 
+    developed with more functionality.
+
+    #func stringizes the token func to 
+    become the name of the function as a 
+    string literal.
+
+    ## is token pasting / token 
+    concatanation and joins two strings 
+    together whilst also stringizing 
+    tokens.
+    */ \
+    const char *func ## _name = #func; \
+    enum TestResult run_ ## func() { \
+        printf("- %s\n", func ## _name); \
         enum TestResult result = func(); \
         printf("\n"); \
         return result; \
     }
 
 
-// Define test functions using TEST_FUNCTION macro
-TEST_FUNCTION(test_readword)  // defines a test called run_test_readword
-TEST_FUNCTION(test_parseintchar) // defines a test called run_test_parseintchar
-TEST_FUNCTION(test_parseint) // defines a test called run_test_parseint
-TEST_FUNCTION(test_parsegame) // defines a test called run_test_parsegame
+// Define test functions using the TEST_FUNCTION macro
+TEST_FUNCTION(test_readword)
+TEST_FUNCTION(test_parseintchar)
+TEST_FUNCTION(test_parseint)
+TEST_FUNCTION(test_parsegame)
 
 
 enum TestResult test() {
