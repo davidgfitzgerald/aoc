@@ -1,11 +1,5 @@
 {
     "files.associations": {
-        "stdio.h": "c",
-        "string.h": "c",
-        "_stdio.h": "c",
-        "_ctermid.h": "c",
-        "cdefs.h": "c",
-        "part1.h": "c",
-        "test_part1.h": "c"
+        "*.h": "c",
     }
 }
