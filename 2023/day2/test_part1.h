@@ -1,6 +1,6 @@
 #ifndef TEST_PART1_H
 #define TEST_PART1_H
-#include "testing.h"
+#include "../../testing/testing.h"
 
 enum TestResult test_readword();
 enum TestResult test_parseintchar();

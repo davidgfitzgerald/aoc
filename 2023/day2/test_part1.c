@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "part1.h"
-#include "testing.h"
+#include "../../testing/testing.h"
 
 enum TestResult test_readword()
 {

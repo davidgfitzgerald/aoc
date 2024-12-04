@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "part1.h"
+#include <string.h>
 #include "testing.h"
 
 int newTestId()
