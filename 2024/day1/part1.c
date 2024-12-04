@@ -1,8 +1,9 @@
 #include <stdio.h>
-#define MAX_LINE 1024
 
 
 int main(void) {
+    printf("part1.c main ran\n");
+
     FILE *infile = fopen("input.txt", "r");
     if (infile == NULL)
     {
@@ -11,3 +12,6 @@ int main(void) {
     }    
 }
 
+int add(int num1, int num2) {
+    return num1 + num2;
+}

@@ -4,13 +4,17 @@ CFLAGS = -Wall -Wextra -std=c99
 SRCS_PT1 = part1.c ../../testing/testing.c test_part1.c
 OBJS_PT1 = $(SRCS_PT1:.c=.o)
 EXEC_PT1 = part1.out
+TEST_PT1 = test_part1.out
 
 .PHONY: all clean
 
-all: $(EXEC_PT1)
+all: $(EXEC_PT1) $(TEST_PT1)
 
 $(EXEC_PT1): $(OBJS_PT1)
 	$(CC) $(CFLAGS) -o $(EXEC_PT1) $(OBJS_PT1)
+
+$(TEST_PT1): $(OBJS_PT1)
+	$(CC) $(CFLAGS) -o $(TEST_PT1) $(OBJS_PT1)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
