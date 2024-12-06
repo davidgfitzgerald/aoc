@@ -1,19 +1,11 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c99 -fPIC
-
-TESTING_C = testing.c
-TESTING_O = $(TESTING_C:.c=.o)
-LIB_TESTING_SO = lib$(TESTING_C:.c=.so)
+# Build testing.o
 
 .PHONY: all clean
 
-all: $(TESTING_O) $(LIB_TESTING_SO)
+all: testing.o
 
-$(TESTING_O): $(TESTING_C)
-	$(CC) $(CFLAGS) -c $(TESTING_C) -o $(TESTING_O)
-
-$(LIB_TESTING_SO): $(TESTING_O)
-	$(CC) $(CFLAGS) -shared -o $(LIB_TESTING_SO) $(TESTING_O)
+testing.o: testing.c
+	gcc -Wall -Wextra -std=c99 -c testing.c -o testing.o
 
 clean:
-	rm -f $(TESTING_O) $(LIB_TESTING_SO)
+	rm -f testing.o

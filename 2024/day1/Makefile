@@ -1,29 +1,32 @@
+# Compiler command and flags
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99
 
-SRCS_PT1 = part1.c ../../testing/testing.c test_part1.c
-OBJS_PT1 = $(SRCS_PT1:.c=.o)
-EXEC_PT1 = part1.out
-TEST_PT1 = test_part1.out
+.PHONY: all clean test run  # Define commands as opposed to files to create
 
-.PHONY: all clean
+# Default commands to run
+all: part1.out test_part1.out
 
-all: $(EXEC_PT1) $(TEST_PT1)
-
-$(EXEC_PT1): $(OBJS_PT1)
-	$(CC) $(CFLAGS) -o $(EXEC_PT1) $(OBJS_PT1)
-
-$(TEST_PT1): $(OBJS_PT1)
-	$(CC) $(CFLAGS) -o $(TEST_PT1) $(OBJS_PT1)
-
+# Create all .o files from all .c files
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+# Create src executable .out file
+part1.out: part1.o
+	$(CC) $(CFLAGS) -o part1.out part1.o
+
+# Create test executable .out file
+test_part1.out: test_part1.o funcs.o
+	$(CC) $(CFLAGS) -o test_part1.out test_part1.o ../../testing/testing.o funcs.o
+
+# Remove .o and .out files
 clean:
-	rm -f $(OBJS_PT1) $(EXEC_PT1)
+	rm -f part1.o part1.out test_part1.o test_part1.out funcs.o
 
-test_pt1: $(EXEC_PT1)
-	./$(EXEC_PT1) --test
+# Run the test .out file
+test: test_part1.out
+	./test_part1.out
 
-run_pt1: $(EXEC_PT1)
-	./$(EXEC_PT1)
+# Run the source .out file
+run: part1.out
+	./part1.out

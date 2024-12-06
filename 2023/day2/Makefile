@@ -5,7 +5,7 @@ SRCS_PT1 = part1.c ../../testing/testing.c test_part1.c
 OBJS_PT1 = $(SRCS_PT1:.c=.o)
 EXEC_PT1 = part1.out
 
-.PHONY: all clean
+.PHONY: all clean test run_pt1
 
 all: $(EXEC_PT1)
 
@@ -18,7 +18,7 @@ $(EXEC_PT1): $(OBJS_PT1)
 clean:
 	rm -f $(OBJS_PT1) $(EXEC_PT1)
 
-test_pt1: $(EXEC_PT1)
+test: $(EXEC_PT1)
 	./$(EXEC_PT1) --test
 
 run_pt1: $(EXEC_PT1)

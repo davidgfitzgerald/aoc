@@ -1,12 +1,13 @@
-// #include <stdio.h>
-#include "part1.h"
+#include <stdio.h>
+#include "funcs.h"
 #include "../../testing/testing.h"
+
 
 enum TestResult test_add_function()
 {
     if (
-        assertInt(add(1, 2), 3, "parseint('0'))") == TEST_FAILED ||
-        assertInt(add(-1, 0), -1, "parseint('1'") == TEST_FAILED)
+        assertInt(add(1, 2), 4, "add(1, 2)") == TEST_FAILED ||
+        assertInt(add(-1, 0), -1, "add(-1, 0)") == TEST_FAILED)
     {
         return TEST_FAILED;
     }
@@ -28,4 +29,8 @@ enum TestResult test()
     }
 
     return TEST_PASSED;
+}
+
+int main(void) {
+    test();
 }
