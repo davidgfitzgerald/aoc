@@ -4,4 +4,5 @@
 
 
 void validate_args(int argc, char *argv[]);
-char** read();
+int length(char* str);
+char** read(FILE *file);

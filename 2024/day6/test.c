@@ -25,11 +25,25 @@ void test_second_char_in_first_line_is_expected(char** matrix) {
     assert(row1[1] == '#');
 }
 
-
-int main() {
-    char **matrix = read();
+void matrix_tests(FILE *test_txt) {
+    char **matrix = read(test_txt);
 
     test_first_line_is_expected(matrix);
     test_first_char_in_first_line_is_expected(matrix);
     test_second_char_in_first_line_is_expected(matrix);
+}
+
+void test_length() {
+    assert(length(".#.") == 3);
+    assert(length("hello") == 5);
+}
+
+
+int main() {
+    FILE *test_txt = fopen("test.txt", "r");
+
+    // test_length();
+    // read(test_txt);
+
+    // matrix_tests(test_txt);
 }
